@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { spawnSync } from "node:child_process";
 
 import { auditRepository } from "../plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs";
 
@@ -57,6 +58,16 @@ test("picture sources do not require alt text when the fallback image has it", (
   const report = auditRepository(root);
   assert.equal(report.readme.imagesMissingAlt, 0);
   assert.equal(report.readme.brokenLocalLinks.length, 0);
+});
+
+test("CLI runs when invoked through a symlinked path", () => {
+  const root = tempRepo();
+  write(root, "README.md", "# Example\n");
+  const linkedScript = path.join(root, "audit-repo.mjs");
+  fs.symlinkSync(new URL("../plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs", import.meta.url), linkedScript);
+  const result = spawnSync(process.execPath, [linkedScript, "--root", root, "--json"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(JSON.parse(result.stdout).tool, "open-source-repo-polish/0.1.1");
 });
 
 test("symlinked README is refused", () => {

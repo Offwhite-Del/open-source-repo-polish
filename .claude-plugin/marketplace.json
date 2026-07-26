@@ -12,7 +12,7 @@
       "name": "repo-polish",
       "source": "./plugins/repo-polish",
       "description": "Audit and improve repository presentation, onboarding, trust, and community health.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Offwhite-Del"
       }

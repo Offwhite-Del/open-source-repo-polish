@@ -17,7 +17,7 @@
 
 Open Source Repo Polish 是一个跨 Agent Skill，用于把“功能可用”的仓库整理成清晰、可信、中英双语、方便参与贡献的开源项目，同时避免虚假徽章、品牌照搬和装饰性堆砌。
 
-> **当前状态：** `v0.1.0`。内置审计只在本地只读运行、零遥测；除 Node.js 18+ 外没有运行时依赖。
+> **当前状态：** `v0.1.1`。内置审计只在本地只读运行、零遥测；除 Node.js 18+ 外没有运行时依赖。
 
 ## 为什么需要这个 Skill
 
@@ -95,7 +95,7 @@ node plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs \
 ## 审计示例
 
 ```text
-Open Source Repo Polish 0.1.0
+Open Source Repo Polish 0.1.1
 Root: /path/to/repository
 Local readiness: 86/100
 Findings: 2
