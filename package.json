@@ -1,0 +1,16 @@
+{
+  "name": "open-source-repo-polish",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Development checks for the Open Source Repo Polish Agent Skill.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "audit:self": "node plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs --root . --json",
+    "test": "node --test test/audit-repo.test.mjs",
+    "validate": "npm test && npm run audit:self"
+  }
+}

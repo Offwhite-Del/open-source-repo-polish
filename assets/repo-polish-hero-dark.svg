@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Open Source Repo Polish</title>
+  <desc id="desc">Evidence before decoration. Clarity, trust, and craft for open-source repositories.</desc>
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5eead4"/><stop offset="1" stop-color="#60a5fa"/></linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#dbeafe" stroke-opacity=".045"/></pattern>
+  </defs>
+  <rect width="1200" height="420" rx="28" fill="#0b1524"/>
+  <rect width="1200" height="420" rx="28" fill="url(#grid)"/>
+  <g transform="translate(92 84)">
+    <rect width="252" height="252" rx="58" fill="#101f32" stroke="#dbeafe" stroke-opacity=".15" stroke-width="2"/>
+    <path d="M62 72h128M62 116h92M62 160h112" stroke="#e7f3ff" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="190" cy="174" r="42" fill="url(#accent)"/>
+    <path d="m170 174 14 14 27-32" fill="none" stroke="#07111f" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(402 92)">
+    <text x="2" y="28" fill="#5eead4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" font-weight="700" letter-spacing="2">OPEN SOURCE</text>
+    <text x="0" y="92" fill="#f7fbff" font-family="Georgia, Cambria, serif" font-size="58" font-weight="700" letter-spacing="-1">Repo Polish</text>
+    <text x="2" y="137" fill="#afc3d8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20">Clarity, trust, and craft—without clutter.</text>
+    <rect x="0" y="174" width="646" height="2" fill="url(#accent)" opacity=".72"/>
+    <text x="2" y="220" fill="#5eead4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" font-weight="700">EVIDENCE BEFORE DECORATION</text>
+    <text x="2" y="257" fill="#93abc1" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14">AUDIT  ·  DESIGN  ·  VERIFY  ·  PUBLISH</text>
+  </g>
+</svg>

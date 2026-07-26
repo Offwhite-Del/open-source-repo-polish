@@ -1,0 +1,38 @@
+name: Bug report / 缺陷报告
+description: Report a reproducible audit or Skill defect / 报告可复现的审计或 Skill 缺陷
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version / 版本
+      placeholder: v0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Agent, OS, and Node.js / Agent、系统与 Node.js
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction / 最小复现
+      description: Remove private paths, secrets, and repository data not required to reproduce the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior / 预期与实际行为
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy / 隐私
+      options:
+        - label: I removed credentials, private paths, configuration values, transcripts, plans, backups, and receipts. / 我已删除凭证、私人路径、配置值、会话、计划、备份和回执。
+          required: true

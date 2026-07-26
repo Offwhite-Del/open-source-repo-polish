@@ -1,0 +1,4 @@
+interface:
+  display_name: "Open Source Repo Polish"
+  short_description: "Audit and polish an open-source repository"
+  default_prompt: "Use $open-source-repo-polish to audit this repository, propose the smallest high-value improvements, apply approved changes, and verify the result."

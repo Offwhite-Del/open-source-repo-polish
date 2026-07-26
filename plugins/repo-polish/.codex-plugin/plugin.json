@@ -1,0 +1,28 @@
+{
+  "name": "repo-polish",
+  "version": "0.1.0",
+  "description": "Audit and improve open-source repository presentation, onboarding, trust, and community health.",
+  "author": {
+    "name": "Offwhite-Del",
+    "url": "https://github.com/Offwhite-Del"
+  },
+  "homepage": "https://github.com/Offwhite-Del/open-source-repo-polish",
+  "repository": "https://github.com/Offwhite-Del/open-source-repo-polish",
+  "license": "Apache-2.0",
+  "keywords": ["agent-skills", "repository", "readme", "open-source", "design"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Open Source Repo Polish",
+    "shortDescription": "Make repositories clear, trusted, and contribution-ready",
+    "longDescription": "An evidence-first repository audit and improvement workflow for README structure, bilingual presentation, onboarding, trust signals, community files, visual hierarchy, and GitHub metadata.",
+    "developerName": "Offwhite-Del",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write", "Web"],
+    "websiteURL": "https://github.com/Offwhite-Del/open-source-repo-polish",
+    "defaultPrompt": [
+      "Audit this repository and propose the smallest high-value polish improvements.",
+      "Make this project open-source ready with clear bilingual documentation and verified trust signals."
+    ],
+    "brandColor": "#0F766E"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "repo-polish",
+  "version": "0.1.0",
+  "description": "Audit and improve open-source repository presentation, onboarding, trust, and community health.",
+  "author": {
+    "name": "Offwhite-Del",
+    "url": "https://github.com/Offwhite-Del"
+  },
+  "homepage": "https://github.com/Offwhite-Del/open-source-repo-polish",
+  "repository": "https://github.com/Offwhite-Del/open-source-repo-polish",
+  "license": "Apache-2.0",
+  "keywords": ["agent-skills", "repository", "readme", "open-source", "design"]
+}
