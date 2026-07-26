@@ -1,8 +1,6 @@
 ---
 name: open-source-repo-polish
 description: Audit and improve an open-source repository's README, bilingual presentation, visual hierarchy, onboarding, community health, trust signals, issue and pull-request surfaces, and GitHub metadata. Use when a repository needs polishing, beautification, open-source readiness, README redesign, clearer installation, contributor setup, or a measured repository-health pass.
-license: Apache-2.0
-compatibility: Requires filesystem access; the bundled read-only audit requires Node.js 18+. GitHub metadata checks benefit from git, GitHub CLI, or web access.
 ---
 
 # Open Source Repo Polish
