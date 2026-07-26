@@ -1,0 +1,21 @@
+{
+  "name": "repo-polish",
+  "owner": {
+    "name": "Offwhite-Del",
+    "url": "https://github.com/Offwhite-Del"
+  },
+  "metadata": {
+    "description": "Evidence-first open-source repository polish."
+  },
+  "plugins": [
+    {
+      "name": "repo-polish",
+      "source": "./plugins/repo-polish",
+      "description": "Audit and improve repository presentation, onboarding, trust, and community health.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Offwhite-Del"
+      }
+    }
+  ]
+}

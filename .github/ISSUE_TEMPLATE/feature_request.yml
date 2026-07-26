@@ -1,0 +1,24 @@
+name: Feature request / 功能建议
+description: Propose a bounded, verifiable improvement / 提议范围明确、可验证的改进
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Repository workflow problem / 仓库工作流问题
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed outcome and evidence / 建议结果与证据
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundaries / 边界
+      options:
+        - label: This does not require telemetry, private repository data, copied branding, or an always-on service. / 不需要遥测、私人仓库数据、品牌照搬或常驻服务。
+          required: true

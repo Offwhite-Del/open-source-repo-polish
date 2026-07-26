@@ -1,0 +1,68 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import test from "node:test";
+
+import { auditRepository } from "../plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs";
+
+function tempRepo() {
+  return fs.mkdtempSync(path.join(os.tmpdir(), "repo-polish-test-"));
+}
+
+function write(root, relative, content = "x\n") {
+  const target = path.join(root, relative);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, content);
+}
+
+test("a complete public surface scores highly without reading secrets", () => {
+  const root = tempRepo();
+  write(root, "README.md", `# Example\n\n[简体中文](README.zh-CN.md)\n\n![Hero](assets/hero.svg)\n\n## Quick start\n\n## Install\n\n## Demo\n\n## Safety\n\n## Contributing\n`);
+  write(root, "README.zh-CN.md", "# 示例\n");
+  write(root, "assets/hero.svg", "<svg xmlns=\"http://www.w3.org/2000/svg\"/>\n");
+  for (const file of ["LICENSE", "SECURITY.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SUPPORT.md", "CHANGELOG.md", ".github/PULL_REQUEST_TEMPLATE.md", ".github/ISSUE_TEMPLATE/bug.yml"]) write(root, file);
+  write(root, ".env", "SECRET_DO_NOT_REPORT=hidden\n");
+
+  const report = auditRepository(root);
+  assert.ok(report.score.value >= 90);
+  assert.equal(report.privacy.envFilesRead, false);
+  assert.doesNotMatch(JSON.stringify(report), /SECRET_DO_NOT_REPORT|hidden/);
+  assert.equal(report.readme.brokenLocalLinks.length, 0);
+});
+
+test("a sparse repository receives actionable findings", () => {
+  const root = tempRepo();
+  const report = auditRepository(root);
+  const ids = report.findings.map((item) => item.id);
+  assert.ok(ids.includes("missing-readme"));
+  assert.ok(ids.includes("missing-license"));
+  assert.ok(report.score.value < 30);
+});
+
+test("broken local links and missing alt text are detected", () => {
+  const root = tempRepo();
+  write(root, "README.md", "# Example\n\n![](assets/missing.svg)\n\n[Guide](docs/missing.md)\n");
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, ["assets/missing.svg", "docs/missing.md"]);
+  assert.equal(report.readme.imagesMissingAlt, 1);
+  assert.ok(report.findings.some((item) => item.id === "broken-local-links"));
+});
+
+test("picture sources do not require alt text when the fallback image has it", () => {
+  const root = tempRepo();
+  write(root, "README.md", `<picture>\n<source media="(prefers-color-scheme: dark)" srcset="dark.svg">\n<img alt="Project hero" src="light.svg">\n</picture>\n`);
+  write(root, "dark.svg");
+  write(root, "light.svg");
+  const report = auditRepository(root);
+  assert.equal(report.readme.imagesMissingAlt, 0);
+  assert.equal(report.readme.brokenLocalLinks.length, 0);
+});
+
+test("symlinked README is refused", () => {
+  const root = tempRepo();
+  write(root, "real.md", "# Example\n");
+  fs.symlinkSync(path.join(root, "real.md"), path.join(root, "README.md"));
+  const report = auditRepository(root);
+  assert.equal(report.files.readme, false);
+});
