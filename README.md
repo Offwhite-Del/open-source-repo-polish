@@ -17,7 +17,7 @@
 
 Open Source Repo Polish is a cross-agent Skill for turning a functional repository into a clear, trustworthy, bilingual, and contribution-ready open-source project—without fake badges, copied branding, or decorative clutter.
 
-> **Status:** `v0.1.0`. The bundled audit is local, read-only, zero-telemetry, and dependency-free beyond Node.js 18+.
+> **Status:** `v0.1.1`. The bundled audit is local, read-only, zero-telemetry, and dependency-free beyond Node.js 18+.
 
 ## Why this Skill
 
@@ -95,7 +95,7 @@ The script reads only known public repository surfaces. It does not read `.env`,
 ## Example audit
 
 ```text
-Open Source Repo Polish 0.1.0
+Open Source Repo Polish 0.1.1
 Root: /path/to/repository
 Local readiness: 86/100
 Findings: 2

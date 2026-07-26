@@ -1,6 +1,6 @@
 {
   "name": "open-source-repo-polish",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Development checks for the Open Source Repo Polish Agent Skill.",
   "type": "module",

@@ -6,7 +6,7 @@ import process from "node:process";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.1.1";
 
 class UsageError extends Error {}
 
@@ -208,7 +208,8 @@ export async function main(argv = process.argv.slice(2)) {
   process.stdout.write(options.json ? `${JSON.stringify(report, null, 2)}\n` : `${textReport(report)}\n`);
 }
 
-const isDirect = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+const isDirect = process.argv[1]
+  && fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url));
 if (isDirect) {
   main().catch((error) => {
     process.stderr.write(`Repo Polish error: ${error.message}\n`);
