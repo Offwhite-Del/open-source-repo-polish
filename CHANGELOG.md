@@ -1,5 +1,10 @@
 # Changelog / 变更日志
 
+## [0.1.2] - Unreleased
+
+- Reject README links that are absolute, escape the repository root, or resolve outside it through a symlink; redact absolute targets in audit output.
+- 拒绝绝对路径、越过仓库根目录或经符号链接解析到仓库外的 README 链接，并在审计输出中隐藏绝对目标。
+
 ## [0.1.1] - 2026-07-26
 
 - Fixed direct CLI execution when the installed Skill path contains filesystem aliases or symlinks, such as macOS `/tmp` → `/private/tmp`.
@@ -14,3 +19,4 @@
 
 [0.1.1]: https://github.com/Offwhite-Del/open-source-repo-polish/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Offwhite-Del/open-source-repo-polish/releases/tag/v0.1.0
+[0.1.2]: https://github.com/Offwhite-Del/open-source-repo-polish/compare/v0.1.1...HEAD

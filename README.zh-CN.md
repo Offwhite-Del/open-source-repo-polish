@@ -17,7 +17,7 @@
 
 Open Source Repo Polish 是一个跨 Agent Skill，用于把“功能可用”的仓库整理成清晰、可信、中英双语、方便参与贡献的开源项目，同时避免虚假徽章、品牌照搬和装饰性堆砌。
 
-> **当前状态：** `v0.1.1`。内置审计只在本地只读运行、零遥测；除 Node.js 18+ 外没有运行时依赖。
+> **当前状态：** `v0.1.2 candidate`。内置审计只在本地只读运行、零遥测；除 Node.js 18+ 外没有运行时依赖。
 
 ## 为什么需要这个 Skill
 
@@ -95,7 +95,7 @@ node plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs \
 ## 审计示例
 
 ```text
-Open Source Repo Polish 0.1.1
+Open Source Repo Polish 0.1.2
 Root: /path/to/repository
 Local readiness: 86/100
 Findings: 2
@@ -110,6 +110,7 @@ Findings: 2
 - 脚本只读取已识别的仓库文档与 Git 状态。
 - 不读取源代码、`.env`、凭证、私人 Agent 会话或密钥值。
 - 不访问网络，也不修改文件。
+- README 本地目标经过一次 URL 解码和符号链接解析后必须仍位于仓库内；报告会隐藏绝对目标。
 - 远端 GitHub 事实由 Agent 单独核验，不能从本地文件推断。
 
 ## 工作流
@@ -129,7 +130,7 @@ Findings: 2
 - README、许可证、安全、支持、贡献、行为准则和变更日志
 - Issue 与 Pull Request 模板
 - 快速开始、安装、安全、实证/演示和双语导航信号
-- 横幅/媒体、替代文本、徽章和本地链接完整性
+- 横幅/媒体、替代文本、徽章和仓库内本地链接完整性
 - Git 分支和工作树状态
 
 分数只是**本地就绪度启发式结果**，不是 GitHub Community Profile 分数，也不是质量保证。

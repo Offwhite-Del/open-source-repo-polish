@@ -50,6 +50,86 @@ test("broken local links and missing alt text are detected", () => {
   assert.ok(report.findings.some((item) => item.id === "broken-local-links"));
 });
 
+test("repository-relative links remain valid inside the audit root", () => {
+  const root = tempRepo();
+  write(root, "README.md", "# Example\n\n[Guide](docs/guide.md)\n\n[Portable guide](docs\\guide.md)\n");
+  write(root, "docs/guide.md", "# Guide\n");
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, []);
+  assert.deepEqual(report.readme.unsafeLocalLinks, []);
+});
+
+test("parent traversal is unsafe even when the outside target exists", () => {
+  const parent = tempRepo();
+  const root = path.join(parent, "repository");
+  fs.mkdirSync(root);
+  write(parent, "outside.md", "private context\n");
+  write(root, "README.md", "# Example\n\n[Outside](../outside.md)\n\n[Portable outside](..\\outside.md)\n");
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, []);
+  assert.deepEqual(report.readme.unsafeLocalLinks, ["../outside.md", "..\\outside.md"]);
+  assert.ok(report.findings.some((item) => item.id === "unsafe-local-links"));
+});
+
+test("encoded traversal and absolute filesystem links are unsafe without exposing the absolute path", () => {
+  const parent = tempRepo();
+  const root = path.join(parent, "repository");
+  fs.mkdirSync(root);
+  write(parent, "outside.md", "private context\n");
+  const outside = path.join(parent, "outside.md");
+  write(root, "README.md", `# Example\n\n[Encoded](..%2Foutside.md)\n\n[Double encoded](..%252Foutside.md)\n\n[Absolute](${outside})\n\n[Windows](C:\\Users\\Example\\secret.md)\n\n[Drive relative](C:secret.md)\n\n[UNC](\\\\server\\share\\secret.md)\n\n[File URL](file:///private/example.md)\n`);
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.unsafeLocalLinks, ["../outside.md", "<absolute-path>", "<file-url>"]);
+  assert.deepEqual(report.readme.brokenLocalLinks, ["..%2Foutside.md"]);
+  const escapedParent = parent.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  assert.doesNotMatch(JSON.stringify(report.readme.unsafeLocalLinks), new RegExp(escapedParent));
+});
+
+test("renderer character references are decoded before local containment", () => {
+  const parent = tempRepo();
+  const root = path.join(parent, "repository");
+  fs.mkdirSync(root);
+  write(parent, "outside-named.md", "private context\n");
+  write(parent, "outside-numeric.md", "private context\n");
+  write(root, "docs/guide.md", "# Guide\n");
+  write(root, "README.md", "# Example\n\n[Named outside](&period;&period;&sol;outside-named.md)\n\n[Numeric outside](..&#47;outside-numeric.md)\n\n[Guide](docs&sol;guide.md)\n\n[Web](https&colon;//example.com)\n");
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, []);
+  assert.deepEqual(report.readme.unsafeLocalLinks, ["../outside-named.md", "../outside-numeric.md"]);
+});
+
+test("overlong numeric character references remain nonentities", () => {
+  const root = tempRepo();
+  write(root, "&", "literal ampersand target\n");
+  write(
+    root,
+    "README.md",
+    "# Example\n\n[Decimal nonentity](&#00000046;&#00000046;/outside.md)\n\n[Hex nonentity](&#x000002e;&#x000002e;/outside.md)\n",
+  );
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, []);
+  assert.deepEqual(report.readme.unsafeLocalLinks, []);
+});
+
+test("a repository link cannot escape through a symlink", () => {
+  const parent = tempRepo();
+  const root = path.join(parent, "repository");
+  fs.mkdirSync(path.join(root, "docs"), { recursive: true });
+  write(parent, "outside.md", "private context\n");
+  fs.symlinkSync(path.join(parent, "outside.md"), path.join(root, "docs", "outside.md"));
+  write(root, "README.md", "# Example\n\n[Outside](docs/outside.md)\n");
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.unsafeLocalLinks, ["docs/outside.md"]);
+});
+
+test("web, mail, fragment, and data links are outside local containment", () => {
+  const root = tempRepo();
+  write(root, "README.md", "# Example\n\n[Web](https://example.com)\n\n[Mail](mailto:maintainer@example.com)\n\n[Section](#example)\n\n![Inline](data:image/svg+xml;base64,PHN2Zy8+)\n");
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, []);
+  assert.deepEqual(report.readme.unsafeLocalLinks, []);
+});
+
 test("picture sources do not require alt text when the fallback image has it", () => {
   const root = tempRepo();
   write(root, "README.md", `<picture>\n<source media="(prefers-color-scheme: dark)" srcset="dark.svg">\n<img alt="Project hero" src="light.svg">\n</picture>\n`);
@@ -67,7 +147,7 @@ test("CLI runs when invoked through a symlinked path", () => {
   fs.symlinkSync(new URL("../plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs", import.meta.url), linkedScript);
   const result = spawnSync(process.execPath, [linkedScript, "--root", root, "--json"], { encoding: "utf8" });
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(JSON.parse(result.stdout).tool, "open-source-repo-polish/0.1.1");
+  assert.equal(JSON.parse(result.stdout).tool, "open-source-repo-polish/0.1.2");
 });
 
 test("symlinked README is refused", () => {

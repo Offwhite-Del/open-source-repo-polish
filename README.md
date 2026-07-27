@@ -17,7 +17,7 @@
 
 Open Source Repo Polish is a cross-agent Skill for turning a functional repository into a clear, trustworthy, bilingual, and contribution-ready open-source project—without fake badges, copied branding, or decorative clutter.
 
-> **Status:** `v0.1.1`. The bundled audit is local, read-only, zero-telemetry, and dependency-free beyond Node.js 18+.
+> **Status:** `v0.1.2 candidate`. The bundled audit is local, read-only, zero-telemetry, and dependency-free beyond Node.js 18+.
 
 ## Why this Skill
 
@@ -95,7 +95,7 @@ The script reads only known public repository surfaces. It does not read `.env`,
 ## Example audit
 
 ```text
-Open Source Repo Polish 0.1.1
+Open Source Repo Polish 0.1.2
 Root: /path/to/repository
 Local readiness: 86/100
 Findings: 2
@@ -110,6 +110,7 @@ The score is a navigation aid. Review every finding against the project's maturi
 - The script reads only recognized repository documentation and Git status.
 - It never reads source code, `.env`, credentials, private Agent transcripts, or secret values.
 - It never accesses the network or changes files.
+- Local README targets must remain inside the repository after one URL-decoding pass and symlink resolution; absolute targets are redacted in reports.
 - Remote GitHub facts are checked separately by the Agent and must not be inferred from local files.
 
 ## Workflow
@@ -129,7 +130,7 @@ The Skill stops when all in-scope findings are resolved or have one explicit blo
 - README, license, security, support, contribution, conduct, and changelog surfaces
 - Issue and pull-request templates
 - Quick start, installation, safety, evidence/demo, and bilingual navigation signals
-- Hero/media presence, alt text, badges, and local link integrity
+- Hero/media presence, alt text, badges, and repository-contained local link integrity
 - Git branch and dirty-worktree state
 
 The score is a **local readiness heuristic**, not GitHub's Community Profile score and not a quality guarantee.
