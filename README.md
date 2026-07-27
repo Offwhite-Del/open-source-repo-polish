@@ -1,7 +1,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/repo-polish-hero-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/repo-polish-hero-light.svg">
-  <img alt="Open Source Repo Polish — evidence before decoration" src="assets/repo-polish-hero-light.svg" width="100%">
+  <img alt="LaunchSieve — evidence before decoration" src="assets/repo-polish-hero-light.svg" width="100%">
 </picture>
 
 <div align="center">
@@ -9,13 +9,20 @@
 </div>
 
 <div align="center">
-  <a href="https://github.com/Offwhite-Del/open-source-repo-polish/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Offwhite-Del/open-source-repo-polish/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/Offwhite-Del/open-source-repo-polish/releases"><img alt="Release" src="https://img.shields.io/github/v/release/Offwhite-Del/open-source-repo-polish?display_name=tag&sort=semver"></a>
-  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/github/license/Offwhite-Del/open-source-repo-polish"></a>
+  <a href="https://github.com/Offwhite-Del/launch-sieve/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Offwhite-Del/launch-sieve/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Offwhite-Del/launch-sieve/releases"><img alt="Release" src="https://img.shields.io/github/v/release/Offwhite-Del/launch-sieve?display_name=tag&sort=semver"></a>
+  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/github/license/Offwhite-Del/launch-sieve"></a>
   <img alt="Agent Skills compatible" src="https://img.shields.io/badge/Agent%20Skills-compatible-1f6feb">
 </div>
 
-Open Source Repo Polish is a cross-agent Skill for turning a functional repository into a clear, trustworthy, bilingual, and contribution-ready open-source project—without fake badges, copied branding, or decorative clutter.
+LaunchSieve is an Agent Skill for auditing and improving an open-source
+repository before release. It checks product truth, README and bilingual docs,
+onboarding, community health, trust signals, accessibility, and visual
+hierarchy, then proposes the smallest evidence-backed improvements.
+
+The bundled scanner is local and read-only. Repository edits and publishing
+still require explicit authorization. The Skill ID remains
+`open-source-repo-polish` in v0.1.x so existing installations keep working.
 
 > **Status:** `v0.1.2 candidate`. The bundled audit is local, read-only, zero-telemetry, and dependency-free beyond Node.js 18+.
 
@@ -45,7 +52,7 @@ It does not copy Anthropic, OpenAI, or Apple logos, fonts, layouts, or protected
 GitHub CLI 2.90+ can install the Skill into Codex, Claude Code, Copilot, Cursor, Gemini CLI, OpenCode, and many other supported agents:
 
 ```bash
-gh skill install Offwhite-Del/open-source-repo-polish \
+gh skill install Offwhite-Del/launch-sieve \
   open-source-repo-polish --agent codex --scope user
 ```
 
@@ -56,7 +63,7 @@ Replace `codex` with `claude-code`, `github-copilot`, `cursor`, or another suppo
 ### ChatGPT Desktop and Codex plugin
 
 ```bash
-codex plugin marketplace add Offwhite-Del/open-source-repo-polish \
+codex plugin marketplace add Offwhite-Del/launch-sieve \
   --sparse .agents/plugins \
   --sparse plugins
 codex plugin add repo-polish@repo-polish
@@ -67,7 +74,7 @@ Start a new task and invoke `$open-source-repo-polish`.
 ### Claude Code and Claude Code Desktop plugin
 
 ```bash
-claude plugin marketplace add Offwhite-Del/open-source-repo-polish \
+claude plugin marketplace add Offwhite-Del/launch-sieve \
   --sparse .claude-plugin plugins
 claude plugin install repo-polish@repo-polish
 ```
@@ -95,7 +102,7 @@ The script reads only known public repository surfaces. It does not read `.env`,
 ## Example audit
 
 ```text
-Open Source Repo Polish 0.1.2
+LaunchSieve 0.1.2
 Root: /path/to/repository
 Local readiness: 86/100
 Findings: 2

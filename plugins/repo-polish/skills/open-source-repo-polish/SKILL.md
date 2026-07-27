@@ -3,7 +3,7 @@ name: open-source-repo-polish
 description: Audit and improve an open-source repository's README, bilingual presentation, visual hierarchy, onboarding, community health, trust signals, issue and pull-request surfaces, and GitHub metadata. Use when a repository needs polishing, beautification, open-source readiness, README redesign, clearer installation, contributor setup, or a measured repository-health pass.
 ---
 
-# Open Source Repo Polish
+# LaunchSieve
 
 Improve repository comprehension and trust before decoration. A polished repository makes its purpose, first verified result, evidence limits, safety boundaries, and contribution path obvious.
 

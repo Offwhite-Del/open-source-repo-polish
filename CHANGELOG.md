@@ -17,6 +17,6 @@
 - Added Codex and Claude plugin marketplaces and bilingual documentation.
 - 新增跨 Agent 仓库优化 Skill、只读零依赖审计、测试、Codex/Claude 插件市场与双语文档。
 
-[0.1.1]: https://github.com/Offwhite-Del/open-source-repo-polish/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/Offwhite-Del/open-source-repo-polish/releases/tag/v0.1.0
-[0.1.2]: https://github.com/Offwhite-Del/open-source-repo-polish/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Offwhite-Del/launch-sieve/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/Offwhite-Del/launch-sieve/releases/tag/v0.1.0
+[0.1.2]: https://github.com/Offwhite-Del/launch-sieve/compare/v0.1.1...HEAD

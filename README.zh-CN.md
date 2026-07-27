@@ -1,7 +1,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/repo-polish-hero-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/repo-polish-hero-light.svg">
-  <img alt="Open Source Repo Polish — 先证据，后装饰" src="assets/repo-polish-hero-light.svg" width="100%">
+  <img alt="LaunchSieve — 先证据，后装饰" src="assets/repo-polish-hero-light.svg" width="100%">
 </picture>
 
 <div align="center">
@@ -9,13 +9,18 @@
 </div>
 
 <div align="center">
-  <a href="https://github.com/Offwhite-Del/open-source-repo-polish/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Offwhite-Del/open-source-repo-polish/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/Offwhite-Del/open-source-repo-polish/releases"><img alt="Release" src="https://img.shields.io/github/v/release/Offwhite-Del/open-source-repo-polish?display_name=tag&sort=semver"></a>
-  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/github/license/Offwhite-Del/open-source-repo-polish"></a>
+  <a href="https://github.com/Offwhite-Del/launch-sieve/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Offwhite-Del/launch-sieve/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Offwhite-Del/launch-sieve/releases"><img alt="Release" src="https://img.shields.io/github/v/release/Offwhite-Del/launch-sieve?display_name=tag&sort=semver"></a>
+  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/github/license/Offwhite-Del/launch-sieve"></a>
   <img alt="兼容 Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-compatible-1f6feb">
 </div>
 
-Open Source Repo Polish 是一个跨 Agent Skill，用于把“功能可用”的仓库整理成清晰、可信、中英双语、方便参与贡献的开源项目，同时避免虚假徽章、品牌照搬和装饰性堆砌。
+LaunchSieve 是一个用于开源发布前审计和改进的 Agent Skill。它检查产品事实、
+README 与双语文档、上手路径、社区健康、信任信号、可访问性和视觉层级，
+再提出范围最小、证据充分的改进。
+
+内置扫描器只在本地只读运行；修改仓库与发布仍需明确授权。为保证现有安装
+继续可用，v0.1.x 的 Skill ID 暂时保留为 `open-source-repo-polish`。
 
 > **当前状态：** `v0.1.2 candidate`。内置审计只在本地只读运行、零遥测；除 Node.js 18+ 外没有运行时依赖。
 
@@ -45,7 +50,7 @@ Skill 把 GitHub 仓库健康规范与三个基于公开资料重新归纳的设
 GitHub CLI 2.90+ 可以把 Skill 安装到 Codex、Claude Code、Copilot、Cursor、Gemini CLI、OpenCode 等多种 Agent：
 
 ```bash
-gh skill install Offwhite-Del/open-source-repo-polish \
+gh skill install Offwhite-Del/launch-sieve \
   open-source-repo-polish --agent codex --scope user
 ```
 
@@ -56,7 +61,7 @@ gh skill install Offwhite-Del/open-source-repo-polish \
 ### ChatGPT 桌面端与 Codex 插件
 
 ```bash
-codex plugin marketplace add Offwhite-Del/open-source-repo-polish \
+codex plugin marketplace add Offwhite-Del/launch-sieve \
   --sparse .agents/plugins \
   --sparse plugins
 codex plugin add repo-polish@repo-polish
@@ -67,7 +72,7 @@ codex plugin add repo-polish@repo-polish
 ### Claude Code 与 Claude Code Desktop 插件
 
 ```bash
-claude plugin marketplace add Offwhite-Del/open-source-repo-polish \
+claude plugin marketplace add Offwhite-Del/launch-sieve \
   --sparse .claude-plugin plugins
 claude plugin install repo-polish@repo-polish
 ```
@@ -95,7 +100,7 @@ node plugins/repo-polish/skills/open-source-repo-polish/scripts/audit-repo.mjs \
 ## 审计示例
 
 ```text
-Open Source Repo Polish 0.1.2
+LaunchSieve 0.1.2
 Root: /path/to/repository
 Local readiness: 86/100
 Findings: 2

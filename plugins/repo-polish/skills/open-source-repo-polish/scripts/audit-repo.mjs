@@ -246,7 +246,7 @@ function parseArgs(argv) {
 
 function textReport(report) {
   const lines = [
-    `Open Source Repo Polish ${VERSION}`,
+    `LaunchSieve ${VERSION}`,
     `Root: ${report.root}`,
     `Local readiness: ${report.score.value}/${report.score.maximum}`,
     `Findings: ${report.findings.length}`,

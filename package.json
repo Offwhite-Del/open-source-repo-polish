@@ -1,8 +1,8 @@
 {
-  "name": "open-source-repo-polish",
+  "name": "launch-sieve",
   "version": "0.1.2",
   "private": true,
-  "description": "Development checks for the Open Source Repo Polish Agent Skill.",
+  "description": "Development checks for the LaunchSieve open-source release audit Skill.",
   "type": "module",
   "license": "Apache-2.0",
   "engines": {
