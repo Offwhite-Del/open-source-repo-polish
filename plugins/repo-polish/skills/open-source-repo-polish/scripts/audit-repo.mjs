@@ -42,9 +42,29 @@ function directoryHasFiles(directory, pattern = () => true) {
   }
 }
 
+const rendererPathEntities = new Map([
+  ["bsol", "\\"],
+  ["colon", ":"],
+  ["num", "#"],
+  ["percnt", "%"],
+  ["period", "."],
+  ["quest", "?"],
+  ["sol", "/"],
+]);
+
+function decodeRendererPathEntities(value) {
+  return value.replace(/&#(?:[xX]([0-9a-fA-F]{1,6})|([0-9]{1,7}));|&([A-Za-z][A-Za-z0-9]+);/g, (entity, hex, decimal, name) => {
+    if (name) return rendererPathEntities.get(name) ?? entity;
+    const codePoint = Number.parseInt(hex || decimal, hex ? 16 : 10);
+    if (codePoint === 0 || codePoint > 0x10ffff || (codePoint >= 0xd800 && codePoint <= 0xdfff)) return "\uFFFD";
+    return String.fromCodePoint(codePoint);
+  });
+}
+
 function normalizeTarget(raw) {
   const withoutTitle = raw.trim().replace(/^<|>$/g, "").split(/\s+["']/)[0];
-  const withoutFragment = withoutTitle.split("#")[0].split("?")[0];
+  const renderedTarget = decodeRendererPathEntities(withoutTitle);
+  const withoutFragment = renderedTarget.split("#")[0].split("?")[0];
   try {
     return decodeURIComponent(withoutFragment);
   } catch {

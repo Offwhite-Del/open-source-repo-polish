@@ -85,6 +85,32 @@ test("encoded traversal and absolute filesystem links are unsafe without exposin
   assert.doesNotMatch(JSON.stringify(report.readme.unsafeLocalLinks), new RegExp(escapedParent));
 });
 
+test("renderer character references are decoded before local containment", () => {
+  const parent = tempRepo();
+  const root = path.join(parent, "repository");
+  fs.mkdirSync(root);
+  write(parent, "outside-named.md", "private context\n");
+  write(parent, "outside-numeric.md", "private context\n");
+  write(root, "docs/guide.md", "# Guide\n");
+  write(root, "README.md", "# Example\n\n[Named outside](&period;&period;&sol;outside-named.md)\n\n[Numeric outside](..&#47;outside-numeric.md)\n\n[Guide](docs&sol;guide.md)\n\n[Web](https&colon;//example.com)\n");
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, []);
+  assert.deepEqual(report.readme.unsafeLocalLinks, ["../outside-named.md", "../outside-numeric.md"]);
+});
+
+test("overlong numeric character references remain nonentities", () => {
+  const root = tempRepo();
+  write(root, "&", "literal ampersand target\n");
+  write(
+    root,
+    "README.md",
+    "# Example\n\n[Decimal nonentity](&#00000046;&#00000046;/outside.md)\n\n[Hex nonentity](&#x000002e;&#x000002e;/outside.md)\n",
+  );
+  const report = auditRepository(root);
+  assert.deepEqual(report.readme.brokenLocalLinks, []);
+  assert.deepEqual(report.readme.unsafeLocalLinks, []);
+});
+
 test("a repository link cannot escape through a symlink", () => {
   const parent = tempRepo();
   const root = path.join(parent, "repository");
