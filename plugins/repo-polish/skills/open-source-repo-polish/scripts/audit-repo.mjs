@@ -6,7 +6,7 @@ import process from "node:process";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-export const VERSION = "0.1.1";
+export const VERSION = "0.1.2";
 
 class UsageError extends Error {}
 
@@ -52,7 +52,22 @@ function normalizeTarget(raw) {
   }
 }
 
-function localLinkFacts(readmePath, content) {
+function insideRoot(root, candidate) {
+  const relative = path.relative(root, candidate);
+  return relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
+function windowsAbsolute(target) {
+  return /^(?:[A-Za-z]:|\\\\)/.test(target);
+}
+
+function safeUnsafeTarget(target) {
+  if (path.isAbsolute(target) || windowsAbsolute(target)) return "<absolute-path>";
+  if (/^file:/i.test(target)) return "<file-url>";
+  return target;
+}
+
+function localLinkFacts(root, readmePath, content) {
   const links = [];
   const images = [];
   for (const match of content.matchAll(/(!?)\[([^\]]*)\]\(([^)]+)\)/g)) {
@@ -67,17 +82,38 @@ function localLinkFacts(readmePath, content) {
     if (/^<img\b/i.test(tag)) images.push(record);
   }
   const brokenLocalLinks = [];
+  const unsafeLocalLinks = [];
+  const realRoot = fs.realpathSync(root);
   for (const link of links) {
     const target = normalizeTarget(link.target);
-    if (!target || /^(?:[a-z]+:|#|data:)/i.test(target)) continue;
-    const resolved = path.resolve(path.dirname(readmePath), target);
-    if (!fs.existsSync(resolved)) brokenLocalLinks.push(target);
+    if (!target || target.startsWith("#")) continue;
+    if (path.isAbsolute(target) || windowsAbsolute(target) || /^file:/i.test(target)) {
+      unsafeLocalLinks.push(safeUnsafeTarget(target));
+      continue;
+    }
+    if (/^[a-z][a-z0-9+.-]*:/i.test(target)) continue;
+    const portableTarget = target.replace(/\\/g, "/");
+    const resolved = path.resolve(path.dirname(readmePath), portableTarget);
+    if (!insideRoot(root, resolved)) {
+      unsafeLocalLinks.push(target);
+      continue;
+    }
+    if (!fs.existsSync(resolved)) {
+      brokenLocalLinks.push(target);
+      continue;
+    }
+    try {
+      if (!insideRoot(realRoot, fs.realpathSync(resolved))) unsafeLocalLinks.push(target);
+    } catch {
+      brokenLocalLinks.push(target);
+    }
   }
   return {
     linkCount: links.length,
     imageCount: images.length,
     imagesMissingAlt: images.filter((image) => !image.alt.trim()).length,
     brokenLocalLinks: [...new Set(brokenLocalLinks)].sort(),
+    unsafeLocalLinks: [...new Set(unsafeLocalLinks)].sort(),
   };
 }
 
@@ -112,7 +148,7 @@ export function auditRepository(rootInput = process.cwd()) {
 
   const readmePath = firstExisting(root, ["README.md", "README.MD", "README"]);
   const readme = readmePath ? safeRead(readmePath) : "";
-  const localLinks = readmePath ? localLinkFacts(readmePath, readme) : { linkCount: 0, imageCount: 0, imagesMissingAlt: 0, brokenLocalLinks: [] };
+  const localLinks = readmePath ? localLinkFacts(root, readmePath, readme) : { linkCount: 0, imageCount: 0, imagesMissingAlt: 0, brokenLocalLinks: [], unsafeLocalLinks: [] };
   const files = {
     readme: Boolean(readmePath),
     license: Boolean(firstExisting(root, ["LICENSE", "LICENSE.md", "LICENSE.txt"])),
@@ -149,13 +185,14 @@ export function auditRepository(rootInput = process.cwd()) {
   if (files.readme && !readmeSignals.safety) findings.push(finding("missing-safety-signal", "low", "The README has no recognized safety, security, or privacy heading.", "Surface material safety or privacy boundaries when they affect adoption."));
   if (files.readme && !readmeSignals.alternateLanguage) findings.push(finding("single-language-readme", "low", "No alternate-language README link was detected.", "Add a maintained translation only when the intended audience benefits."));
   if (localLinks.brokenLocalLinks.length) findings.push(finding("broken-local-links", "high", `${localLinks.brokenLocalLinks.length} local README targets do not exist.`, "Repair or remove every broken local target before publishing."));
+  if (localLinks.unsafeLocalLinks.length) findings.push(finding("unsafe-local-links", "high", `${localLinks.unsafeLocalLinks.length} local README targets escape the repository root.`, "Use repository-relative targets whose lexical and resolved paths remain inside the repository."));
   if (localLinks.imagesMissingAlt) findings.push(finding("missing-image-alt", "medium", `${localLinks.imagesMissingAlt} README media elements have empty or missing alt text.`, "Add concise functional alternative text."));
   if (git.dirty) findings.push(finding("dirty-worktree", "medium", "The Git worktree contains uncommitted changes.", "Separate intended changes from unrelated user work before staging or publishing."));
 
   const points = {
     foundation: (files.readme ? 10 : 0) + (files.license ? 8 : 0) + (files.security ? 6 : 0) + (files.contributing ? 5 : 0) + (files.codeOfConduct ? 4 : 0) + (files.issueTemplate ? 4 : 0) + (files.pullRequestTemplate ? 3 : 0),
     onboarding: (readmeSignals.quickStart ? 8 : 0) + (readmeSignals.installation ? 7 : 0) + (readmeSignals.evidenceOrDemo ? 5 : 0) + (files.support ? 4 : 0) + (files.changelog ? 3 : 0) + (readmeSignals.alternateLanguage ? 3 : 0),
-    presentation: (readmeSignals.topLevelHeading ? 4 : 0) + (readmeSignals.mediaCount ? 6 : 0) + (readmeSignals.badgeCount ? 4 : 0) + (localLinks.imagesMissingAlt === 0 ? 3 : 0) + (localLinks.brokenLocalLinks.length === 0 ? 3 : 0),
+    presentation: (readmeSignals.topLevelHeading ? 4 : 0) + (readmeSignals.mediaCount ? 6 : 0) + (readmeSignals.badgeCount ? 4 : 0) + (localLinks.imagesMissingAlt === 0 ? 3 : 0) + (localLinks.brokenLocalLinks.length === 0 && localLinks.unsafeLocalLinks.length === 0 ? 3 : 0),
     trust: (readmeSignals.safety ? 4 : 0) + (readmeSignals.contributing ? 2 : 0) + (git.repository ? 2 : 0) + (git.dirty === false ? 2 : 0),
   };
   const score = Object.values(points).reduce((sum, value) => sum + value, 0);
